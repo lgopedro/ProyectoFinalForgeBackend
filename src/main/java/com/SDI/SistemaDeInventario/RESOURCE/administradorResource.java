@@ -7,23 +7,22 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 public class administradorResource {
 
 
 
-    @RequestMapping(method = RequestMethod.GET,value = "/administrador/")
+    @RequestMapping(method = RequestMethod.GET,value = "/administrador")
     public List<Empleados> obtenerAdministradores() throws SQLException {
         List<Empleados> administradores = new administradorDAO().obtenerAdministradores();
         return administradores;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/administrador/")
-    public String insertarAdministrador(@RequestBody Empleados administrador) throws SQLException {
-            String temp = new administradorDAO().insertarAdministrador(administrador);
-            return temp;
+    public void insertarAdministrador(@RequestBody Empleados administrador) throws SQLException {
+             new administradorDAO().insertarAdministrador(administrador);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/administrador/{administrador}")

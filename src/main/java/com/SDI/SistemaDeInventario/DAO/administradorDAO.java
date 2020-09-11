@@ -39,7 +39,7 @@ public class administradorDAO {
         }
         return administradores;
     }
-    public String insertarAdministrador(Empleados administrador) throws SQLException {
+    public void insertarAdministrador(Empleados administrador) throws SQLException {
         String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, esAdmin) " +
                 " values (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -50,12 +50,10 @@ public class administradorDAO {
         ps.setString(5, administrador.getContrasenha());
         ps.setInt(6, administrador.getEsAdmin());
         ps.executeUpdate();
-
-        return "administrador agregado";
     }
     public void borrarAdministradorPorUsuario(String usuario) throws SQLException {
         String sql = " delete from EMPLEADOS_SDI " +
-                " where usuario=? and es_Admin=1 ";
+                " where usuario=? and esAdmin=1 ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, usuario);
         ps.executeUpdate();
@@ -64,7 +62,7 @@ public class administradorDAO {
     public Empleados editarAdministradorPorUsuario(Empleados a) throws SQLException {
         String sql = " Update EMPLEADOS_SDI " +
                 " set usuario=?, nombre=?, apellido=?, correo=?, contrasenha=? " +
-                " where usuario=? and es_Admin=1 ";
+                " where usuario=? and esAdmin=1 ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, a.getUsuario());
         ps.setString(2, a.getNombre());
