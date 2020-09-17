@@ -59,7 +59,7 @@ public class administradorDAO {
         ps.executeUpdate();
 
     }
-    public Empleados editarAdministradorPorUsuario(Empleados a) throws SQLException {
+    public void editarAdministradorPorUsuario(String usuario,Empleados a) throws SQLException {
         String sql = " Update EMPLEADOS_SDI " +
                 " set usuario=?, nombre=?, apellido=?, correo=?, contrasenha=? " +
                 " where usuario=? and esAdmin=1 ";
@@ -69,9 +69,8 @@ public class administradorDAO {
         ps.setString(3, a.getApellido());
         ps.setString(4, a.getCorreo());
         ps.setString(5, a.getContrasenha());
-        ps.setString(6, a.getUsuario());
+        ps.setString(6, usuario);
         ps.executeUpdate();
-        return obtenerAdministradorPorUsuario(a.getUsuario()).get(0);
     }
 
     public List<Empleados> obtenerAdministradores() throws SQLException {

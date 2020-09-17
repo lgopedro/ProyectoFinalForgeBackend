@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,5 +97,24 @@ public class productosDAO {
         ps.setInt(8, p.getId());
         ps.executeUpdate();
         return obtenerProductosPorId(p.getId()).get(0);
+    }
+
+    public List<Productos> obtenerStock() throws SQLException {
+        String sql = "SELECT * FROM PRODUCTOS WHERE stock > 1";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<Productos> stock = new ArrayList<>();
+        while(rs.next()){
+            Productos temp = new Productos(rs.getInt("id"),
+                                            rs.getString("nombre"),
+                                            rs.getString("marca"),
+                                            rs.getInt("precio"),
+                                            rs.getInt("stock"),
+                                            rs.getInt("minimo"),
+                                            rs.getString("categoria"));
+
+            stock.add(temp);
+        }
+        return stock;
     }
 }

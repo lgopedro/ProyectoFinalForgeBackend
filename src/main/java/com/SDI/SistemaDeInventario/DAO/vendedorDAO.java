@@ -40,7 +40,7 @@ public class vendedorDAO {
         return vendedores;
     }
     public Empleados insertarVendedor(Empleados v) throws SQLException {
-        String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, es_Admin) " +
+        String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, esAdmin) " +
                 " values (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, v.getUsuario());

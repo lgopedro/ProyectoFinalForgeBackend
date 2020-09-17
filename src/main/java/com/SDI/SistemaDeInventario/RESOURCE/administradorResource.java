@@ -2,7 +2,10 @@ package com.SDI.SistemaDeInventario.RESOURCE;
 
 import com.SDI.SistemaDeInventario.DAO.administradorDAO;
 import com.SDI.SistemaDeInventario.DTO.Empleados;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -20,9 +23,20 @@ public class administradorResource {
         return administradores;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/administrador/")
-    public void insertarAdministrador(@RequestBody Empleados administrador) throws SQLException {
-             new administradorDAO().insertarAdministrador(administrador);
+    @RequestMapping(method = RequestMethod.POST, value = "/administrador")
+    public void insertarAdministrador(@RequestBody Empleados administrador) {
+        try{
+            new administradorDAO().insertarAdministrador(administrador);
+        }catch (SQLServerException x){
+            System.out.println(x.toString());
+            if (x.toString().contains("Violation of PRIMARY KEY")) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya esta siendo usado");
+            }else if(x.toString().contains("Violation of UNIQUE KEY")){
+                throw new ResponseStatusException(HttpStatus.LENGTH_REQUIRED,"El correo ya esta siendo usando");
+            }
+        }catch (SQLException y){
+            System.out.println(y.toString());
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/administrador/{administrador}")
@@ -31,7 +45,19 @@ public class administradorResource {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/administrador/{usuario}")
-    public Empleados editarAdministrador(@RequestBody Empleados a) throws SQLException {
-        return new administradorDAO().editarAdministradorPorUsuario(a);
+    public void editarAdministrador(@PathVariable("usuario") String usuario,  @RequestBody Empleados a) throws SQLException {
+        try{
+            new administradorDAO().editarAdministradorPorUsuario(usuario,a);
+        }catch (SQLServerException x){
+            System.out.println(x.toString());
+            if (x.toString().contains("Violation of PRIMARY KEY")) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya esta siendo usado");
+            }else if(x.toString().contains("Violation of UNIQUE KEY")){
+                throw new ResponseStatusException(HttpStatus.LENGTH_REQUIRED,"El correo ya esta siendo usando");
+            }
+        }catch (SQLException y){
+            System.out.println(y.toString());
+        }
     }
+
 }
