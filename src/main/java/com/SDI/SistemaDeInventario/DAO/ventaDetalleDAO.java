@@ -18,15 +18,16 @@ public class ventaDetalleDAO {
 
     public void insertarVenta(VentaDetalle[] nuevaVenta) throws SQLException {
 
-        String sql = "INSERT INTO DETALLE_VENTA(idVenta,idProducto,precio,cantidad,descuento) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO DETALLE_VENTA(idVenta,idProducto,nombreProducto,precio,cantidad,descuento) VALUES (?,?,?,?,?,?)";
         PreparedStatement ps = connection.prepareStatement(sql);
         for (int i = 0; i < nuevaVenta.length ; i++) {
 
            ps.setInt(1,nuevaVenta[i].getIdVenta());
            ps.setInt(2,nuevaVenta[i].getIdProducto());
-           ps.setInt(3,nuevaVenta[i].getPrecio());
-           ps.setInt(4,nuevaVenta[i].getCantidad());
-           ps.setInt(5,nuevaVenta[i].getDescuento());
+           ps.setString(3,nuevaVenta[i].getNombreProducto());
+           ps.setInt(4,nuevaVenta[i].getPrecio());
+           ps.setInt(5,nuevaVenta[i].getCantidad());
+           ps.setInt(6,nuevaVenta[i].getDescuento());
 
            ps.executeUpdate();
 
