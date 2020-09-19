@@ -16,6 +16,30 @@ public class productosDAO {
     public productosDAO()throws SQLException {
         connection = ConnectionManager.obtenerConexion();
     }
+
+    public List<Productos> obtenerAll() throws SQLException {
+        String sql = " select * " +
+                " from PRODUCTOS ";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<Productos> productos = new LinkedList<>();
+        while (rs.next()) {
+            Productos p = new Productos(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("marca"),
+                    rs.getInt("precio"),
+                    rs.getInt("stock"),
+                    rs.getInt("minimo"),
+                    rs.getString("categoria")
+            );
+            productos.add(p);
+        }
+        return productos;
+    }
+
+
+
     public List<Productos> obtenerProductosPorId(int Id) throws SQLException {
         String sql = " select * " +
                 " from PRODUCTOS " +
