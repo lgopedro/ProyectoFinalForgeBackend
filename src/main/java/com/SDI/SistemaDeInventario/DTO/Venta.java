@@ -7,11 +7,11 @@ public class Venta {
 
     private int idVenta;
     private String idVendedor;
-    private Date fechaHora;
+    private Timestamp fechaHora;
     private String formaDePago;
     private int total;
 
-    public Venta(int idVenta, String idVendedor, Date fechaHora, String formaDePago, int total) {
+    public Venta(int idVenta, String idVendedor, Timestamp fechaHora, String formaDePago, int total) {
         this.idVenta = idVenta;
         this.idVendedor = idVendedor;
         this.fechaHora = fechaHora;
@@ -35,11 +35,11 @@ public class Venta {
         this.idVendedor = idVendedor;
     }
 
-    public Date getFechaHora() {
+    public Timestamp getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(Date fechaHora) {
+    public void setFechaHora(Timestamp fechaHora) {
         this.fechaHora = fechaHora;
     }
 

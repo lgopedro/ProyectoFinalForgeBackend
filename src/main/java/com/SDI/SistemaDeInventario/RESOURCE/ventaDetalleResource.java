@@ -24,5 +24,10 @@ public class ventaDetalleResource {
         new ventaDetalleDAO().insertarVenta(nuevaVenta);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value="/ventaDetalle")
+    public List<VentaDetalle> DetallesDeVentas() throws SQLException{
+        return new ventaDetalleDAO().obtenerDetalles();
+    }
+
 
 }

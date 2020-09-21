@@ -1,9 +1,12 @@
 package com.SDI.SistemaDeInventario.DAO;
 
 import com.SDI.SistemaDeInventario.ConnectionManager;
+import com.SDI.SistemaDeInventario.DTO.Empleados;
 import com.SDI.SistemaDeInventario.DTO.Venta;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ventaDAO {
 
@@ -32,12 +35,30 @@ public class ventaDAO {
         while(rs.next()){
                 ultima= new Venta(rs.getInt("idVenta"),
                                     rs.getString("idVendedor"),
-                                    rs.getDate("fechaHora"),
+                                    rs.getTimestamp("fechaHora"),
                                     rs.getString("formaDePago"),
                                     rs.getInt("total"));
 
         }
         return ultima;
+    }
+
+    public List<Venta> obtenerVentas() throws SQLException {
+        String sql="SELECT * FROM VENTA";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<Venta> ventas = new ArrayList<>();
+        Venta temp = null;
+        while(rs.next()){
+            temp= new Venta(rs.getInt("idVenta"),
+                    rs.getString("idVendedor"),
+                    rs.getTimestamp("fechaHora"),
+                    rs.getString("formaDePago"),
+                    rs.getInt("total"));
+
+            ventas.add(temp);
+        }
+        return ventas;
     }
 
 }

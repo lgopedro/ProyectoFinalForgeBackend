@@ -17,12 +17,27 @@ public class productosDAO {
     public productosDAO()throws SQLException {
         connection = ConnectionManager.obtenerConexion();
     }
-    public List<Productos> obtenerProductosPorId(int Id) throws SQLException {
-        String sql = " select * " +
-                " from PRODUCTOS " +
-                " where id=? ";
+    public List<Productos> obtenerStock() throws SQLException {
+        String sql = "SELECT * FROM PRODUCTOS WHERE stock > 1";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, Id);
+        ResultSet rs = ps.executeQuery();
+        List<Productos> stock = new ArrayList<>();
+        while(rs.next()){
+            Productos temp = new Productos(rs.getInt("id"),
+                                            rs.getString("nombre"),
+                                            rs.getString("marca"),
+                                            rs.getInt("precio"),
+                                            rs.getInt("stock"),
+                                            rs.getInt("minimo"),
+                                            rs.getString("categoria"));
+
+            stock.add(temp);
+        }
+        return stock;
+    }
+    public List<Productos> obtenerAll() throws SQLException {
+        String sql = " select *  from PRODUCTOS";
+        PreparedStatement ps = connection.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         List<Productos> productos = new LinkedList<>();
         while (rs.next()) {
@@ -39,12 +54,13 @@ public class productosDAO {
         }
         return productos;
     }
-    public List<Productos> obtenerProductosPorNombreLike(String nombre) throws SQLException {
-        String sql = " select * " +
-                " from PRODUCTOS " +
-                " where nombre ? ";
+
+
+
+    public List<Productos> obtenerProductosPorId(int id) throws SQLException {
+        String sql = " select * from PRODUCTOS  WHERE id = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, nombre);
+        ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         List<Productos> productos = new LinkedList<>();
         while (rs.next()) {
@@ -61,9 +77,9 @@ public class productosDAO {
         }
         return productos;
     }
+
     public void borrarProductoPorId(int id) throws SQLException {
-        String sql = " delete from PRODUCTOS " +
-                " where id=? ";
+        String sql = " delete from PRODUCTOS where id=? ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, id);
         ps.executeUpdate();
@@ -82,39 +98,18 @@ public class productosDAO {
         ps.executeUpdate();
         return p;
     }
-    public Productos editarProductoPorId(Productos p) throws SQLException {
+    public void editarProductoPorId(int id,Productos p) throws SQLException {
         String sql = " Update PRODUCTOS " +
-                " set id=?, nombre=?, marca=?, precio=?, stock=?, minimo=?, categoria=? " +
+                " set nombre=?, marca=?, precio=?, stock=?, minimo=?, categoria=? " +
                 " where id=? ";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, p.getId());
-        ps.setString(2, p.getNombre());
-        ps.setString(3, p.getMarca());
-        ps.setInt(4, p.getPrecio());
-        ps.setInt(5, p.getStock());
-        ps.setInt(6, p.getMinimo());
-        ps.setString(7, p.getCategoria());
-        ps.setInt(8, p.getId());
+        ps.setString(1, p.getNombre());
+        ps.setString(2, p.getMarca());
+        ps.setInt(3, p.getPrecio());
+        ps.setInt(4, p.getStock());
+        ps.setInt(5, p.getMinimo());
+        ps.setString(6, p.getCategoria());
+        ps.setInt(7, id);
         ps.executeUpdate();
-        return obtenerProductosPorId(p.getId()).get(0);
-    }
-
-    public List<Productos> obtenerStock() throws SQLException {
-        String sql = "SELECT * FROM PRODUCTOS WHERE stock > 1";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-        List<Productos> stock = new ArrayList<>();
-        while(rs.next()){
-            Productos temp = new Productos(rs.getInt("id"),
-                                            rs.getString("nombre"),
-                                            rs.getString("marca"),
-                                            rs.getInt("precio"),
-                                            rs.getInt("stock"),
-                                            rs.getInt("minimo"),
-                                            rs.getString("categoria"));
-
-            stock.add(temp);
-        }
-        return stock;
     }
 }

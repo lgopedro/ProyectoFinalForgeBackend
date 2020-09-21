@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Array;
 import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +27,11 @@ public class ventaResource {
     @RequestMapping(method = RequestMethod.GET, value="/venta/{idVendedor}")
     public Venta ultimaVenta(@PathVariable("idVendedor") String id) throws SQLException{
         return new ventaDAO().obtenerUltimaVenta(id);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/venta")
+    public List<Venta> Ventas() throws SQLException{
+        return new ventaDAO().obtenerVentas();
     }
 
 }
