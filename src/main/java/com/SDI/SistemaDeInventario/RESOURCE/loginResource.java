@@ -4,7 +4,9 @@ package com.SDI.SistemaDeInventario.RESOURCE;
 import com.SDI.SistemaDeInventario.DAO.loginDAO;
 import com.SDI.SistemaDeInventario.DTO.Empleados;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 
@@ -14,13 +16,15 @@ import java.sql.SQLException;
 public class loginResource {
 
 
-    @RequestMapping(method = RequestMethod.GET,value="/login")
-    public boolean validar(@RequestParam("usuario") String usuario,
-                             @RequestParam("contrasenha") String contrasenha,
-                             @RequestParam("esAdmin") int esAdmin) throws SQLException {
+    @RequestMapping(method = RequestMethod.POST,value="/login")
+    public Empleados validar(@RequestBody Empleados empleado) throws SQLException {
+        Empleados empleadoValidado= new loginDAO().validar(empleado);
+        if(empleadoValidado==null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"usuario invalido");
 
+        }
+        return empleadoValidado;
 
-        return new loginDAO().validar(usuario, contrasenha, esAdmin);
     }
 
 

@@ -19,13 +19,14 @@ public class loginDAO {
         connection = ConnectionManager.obtenerConexion();
     }
 
-    public boolean validar(String usuario, String contrasenha, int esAdmin) throws SQLException {
-            boolean login=false;
-        String sql = "SELECT * FROM EMPLEADOS_SDI where esAdmin=?";
+    public Empleados validar(Empleados empleado) throws SQLException {
+
+        String sql = "SELECT * FROM EMPLEADOS_SDI where esAdmin=? and usuario=? and contrasenha=?";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, esAdmin);
+        ps.setInt(1, empleado.getEsAdmin());
+        ps.setString(2,empleado.getUsuario());
+        ps.setString(3,empleado.getContrasenha());
         Empleados temp = null;
-        List<Empleados> lista = new ArrayList<>();
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             temp = new Empleados(rs.getString("usuario"),
@@ -34,18 +35,11 @@ public class loginDAO {
                     rs.getString("correo"),
                     rs.getString("contrasenha"),
                     rs.getInt("esAdmin"));
-            lista.add(temp);
-        }
-        int i=0;
-        while(i<lista.size()){
-            if(lista.get(i).getUsuario().contains(usuario) && lista.get(i).getContrasenha().contains(contrasenha)){
-                login = true;
-                break;
-            }
-            i++;
         }
 
-
-        return login;
+        if(temp!=null){
+            temp.setContrasenha(null);
+        }
+    return temp;
     }
 }
