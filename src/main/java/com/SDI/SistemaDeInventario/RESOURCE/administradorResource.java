@@ -11,9 +11,8 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
+
 public class administradorResource {
-
-
 
     @RequestMapping(method = RequestMethod.GET,  value = "/administrador")
     public List<Empleados> obtenerAdministradores() throws SQLException {
@@ -31,7 +30,7 @@ public class administradorResource {
         new administradorDAO().borrarAdministradorPorUsuario(administrador);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/administradorEdit/{administrador}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/administrador/{administrador}")
     public Empleados editarAdministrador(@RequestBody Empleados a) throws SQLException {
         return new administradorDAO().editarAdministradorPorUsuario(a);
     }

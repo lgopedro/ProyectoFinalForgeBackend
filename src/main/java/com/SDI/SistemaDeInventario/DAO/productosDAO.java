@@ -107,17 +107,16 @@ public class productosDAO {
     }
     public Productos editarProductoPorId(Productos p) throws SQLException {
         String sql = " Update PRODUCTOS " +
-                " set id=?, nombre=?, marca=?, precio=?, stock=?, minimo=?, categoria=? " +
+                " set  nombre=?, marca=?, precio=?, stock=?, minimo=?, categoria=? " +
                 " where id=? ";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, p.getId());
-        ps.setString(2, p.getNombre());
-        ps.setString(3, p.getMarca());
-        ps.setInt(4, p.getPrecio());
-        ps.setInt(5, p.getStock());
-        ps.setInt(6, p.getMinimo());
-        ps.setString(7, p.getCategoria());
-        ps.setInt(8, p.getId());
+        ps.setString(1, p.getNombre());
+        ps.setString(2, p.getMarca());
+        ps.setInt(3, p.getPrecio());
+        ps.setInt(4, p.getStock());
+        ps.setInt(5, p.getMinimo());
+        ps.setString(6, p.getCategoria());
+        ps.setInt(7, p.getId());
         ps.executeUpdate();
         return obtenerProductosPorId(p.getId()).get(0);
     }

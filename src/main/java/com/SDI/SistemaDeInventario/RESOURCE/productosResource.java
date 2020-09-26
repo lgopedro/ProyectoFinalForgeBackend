@@ -20,25 +20,25 @@ public class productosResource {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/productos/obtenerPorId/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/productos/{id}")
     public List<Productos> obtenerProductosPorId(@PathVariable("id") int id)
             throws SQLException {
         return new productosDAO().obtenerProductosPorId(id);
     }
-    @RequestMapping(method = RequestMethod.GET, value = "/productos/obtener/{nombre}")
+    @RequestMapping(method = RequestMethod.GET, value = "/productos/{nombre}")
     public List<Productos> obtenerProductoPorNombreLike(@PathVariable("nombre") String nombre)
             throws SQLException {
         return new productosDAO().obtenerProductosPorNombreLike("%"+nombre+"%");
     }
-    @RequestMapping(method = RequestMethod.POST, value = "/productos/ingresar")
+    @RequestMapping(method = RequestMethod.POST, value = "/productos")
     public Productos insertarProducto(@RequestBody Productos p) throws SQLException {
         return new productosDAO().insertarProducto(p);
     }
-    @RequestMapping(method = RequestMethod.DELETE, value = "/productos/borrar/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/productos/{id}")
     public void borrarProducto(@PathVariable("id") int id) throws SQLException {
         new productosDAO().borrarProductoPorId(id);
     }
-    @RequestMapping(method = RequestMethod.PUT, value = "/productos/actualizar/id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/productos/{id}")
     public Productos editarProducto(@RequestBody Productos p) throws SQLException {
         return new productosDAO().editarProductoPorId(p);
     }

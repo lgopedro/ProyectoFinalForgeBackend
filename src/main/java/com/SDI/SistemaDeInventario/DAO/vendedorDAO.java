@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 //1=true, 0=false
@@ -21,7 +22,7 @@ public class vendedorDAO {
     public List<Empleados> obtenerVendedorPorUsuario(String usuario) throws SQLException {
         String sql = " select * " +
                 " from EMPLEADOS_SDI " +
-                " where usuario=? and es_Admin=0 ";
+                " where usuario=? and esAdmin=0 ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, usuario);
         ResultSet rs = ps.executeQuery();
@@ -33,14 +34,14 @@ public class vendedorDAO {
                     rs.getString("apellido"),
                     rs.getString("correo"),
                     rs.getString("contrasenha"),
-                    rs.getInt("es_Admin")
+                    rs.getInt("esAdmin")
             );
             vendedores.add(v);
         }
         return vendedores;
     }
     public Empleados insertarVendedor(Empleados v) throws SQLException {
-        String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, es_Admin) " +
+        String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, esAdmin) " +
                 " values (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, v.getUsuario());
@@ -55,7 +56,7 @@ public class vendedorDAO {
     }
     public void borrarVendedorPorUsuario(String usuario) throws SQLException {
         String sql = " delete from EMPLEADOS_SDI " +
-                " where usuario=? and es_Admin=0 ";
+                " where usuario=? and esAdmin=0 ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, usuario);
         ps.executeUpdate();
@@ -64,7 +65,7 @@ public class vendedorDAO {
     public Empleados editarVendedorPorUsuario(Empleados v) throws SQLException {
         String sql = " Update EMPLEADOS_SDI " +
                 " set usuario=?, nombre=?, apellido=?, correo=?, contrasenha=? " +
-                " where usuario=? and es_Admin=0 ";
+                " where usuario=? and esAdmin=0 ";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setString(1, v.getUsuario());
         ps.setString(2, v.getNombre());
@@ -72,9 +73,27 @@ public class vendedorDAO {
         ps.setString(4, v.getCorreo());
         ps.setString(5, v.getContrasenha());
         ps.setString(6, v.getUsuario());
-        ps.setInt(7, v.getEsAdmin());
         ps.executeUpdate();
         return obtenerVendedorPorUsuario(v.getUsuario()).get(0);
     }
 
+    public List<Empleados> obtenerVendedores() throws SQLException {
+        String sql ="SELECT * FROM EMPLEADOS_SDI WHERE esAdmin=0";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        List<Empleados> vendedores = new ArrayList<>();
+        Empleados temp = null;
+        while(rs.next()){
+            temp = new Empleados(rs.getString("usuario"),
+                    rs.getString("nombre"),
+                    rs.getString("apellido"),
+                    rs.getString("correo"),
+                    rs.getString("contrasenha"),
+                    rs.getInt("esAdmin"));
+
+            vendedores.add(temp);
+        }
+        return vendedores;
+
+    }
 }
