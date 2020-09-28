@@ -20,17 +20,27 @@ public class vendedorDAO {
     }
 
 
-    public void insertarVendedor(Empleados v) throws SQLException {
+    public Empleados insertarVendedor(Empleados v) throws SQLException {
         String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, esAdmin) " +
                 " values (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql);
+        String contrasenha = new PasswordGenerator().generate();
         ps.setString(1, v.getUsuario());
         ps.setString(2, v.getNombre());
         ps.setString(3, v.getApellido());
         ps.setString(4, v.getCorreo());
-        ps.setString(5, v.getContrasenha());
+        ps.setString(5, contrasenha);
         ps.setInt(6, v.getEsAdmin());
         ps.executeUpdate();
+
+        Empleados contacto = new Empleados(v.getUsuario(),
+                v.getNombre(),
+                v.getApellido(),
+                v.getCorreo(),
+                contrasenha,
+                v.getEsAdmin());
+
+        return contacto;
     }
 
     public void borrarVendedorPorUsuario(String usuario) throws SQLException {
@@ -56,6 +66,14 @@ public class vendedorDAO {
         ps.executeUpdate();
     }
 
+    public void cambiarContraseña(String usuario,String contrasenha) throws SQLException {
+        String sql="update EMPLEADOS_SDI SET contrasenha=? where usuario=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1,contrasenha);
+        ps.setString(2,usuario);
+        ps.executeUpdate();
+    }
+
     public List<Empleados> obtenerVendedores() throws SQLException {
         String sql = "SELECT * FROM EMPLEADOS_SDI WHERE esAdmin=0";
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -74,4 +92,6 @@ public class vendedorDAO {
         }
         return administradores;
     }
+
+
 }

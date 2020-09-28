@@ -108,4 +108,15 @@ public class administradorDAO {
         }
         return administradores;
     }
+
+    public void cambiarContraseña(String usuario,String contrasenha) throws SQLException {
+        String sql="update EMPLEADOS_SDI SET contrasenha=? where usuario=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1,contrasenha);
+        ps.setString(2,usuario);
+        ps.executeUpdate();
+    }
+
+
+
 }

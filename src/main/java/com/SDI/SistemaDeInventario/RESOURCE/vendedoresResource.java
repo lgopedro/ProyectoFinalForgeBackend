@@ -2,8 +2,10 @@ package com.SDI.SistemaDeInventario.RESOURCE;
 
 import com.SDI.SistemaDeInventario.DAO.administradorDAO;
 import com.SDI.SistemaDeInventario.DAO.vendedorDAO;
+import com.SDI.SistemaDeInventario.DTO.EmailSender;
 import com.SDI.SistemaDeInventario.DTO.Empleados;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,10 +18,14 @@ import java.util.List;
 @RequestMapping("/api")
 public class vendedoresResource {
 
+    @Autowired
+    private EmailSender emailSender;
+
     @RequestMapping(method = RequestMethod.POST, value = "/vendedor")
-    public void insertarVendedor(@RequestBody Empleados v) {
+    public Empleados insertarVendedor(@RequestBody Empleados v) {
+        Empleados temp = null;
         try {
-            new vendedorDAO().insertarVendedor(v);
+               temp = new vendedorDAO().insertarVendedor(v);
         } catch (SQLServerException e) {
             System.out.println(e.toString());
             if (e.toString().contains("Violation of PRIMARY KEY")) {
@@ -30,6 +36,8 @@ public class vendedoresResource {
         } catch (SQLException y) {
             System.out.println(y.toString());
         }
+        emailSender.sendEmail(temp.getNombre(), temp.getApellido(), temp.getContrasenha(), temp.getCorreo());
+        return temp;
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/vendedor/{usuario}")
@@ -53,12 +61,15 @@ public class vendedoresResource {
         }
     }
 
-
     @RequestMapping(method = RequestMethod.GET,value = "/vendedor")
     public List<Empleados> obtenerVendedores() throws SQLException {
         return new vendedorDAO().obtenerVendedores();
     }
 
+    @RequestMapping(method = RequestMethod.PUT,value="/vendedor/restar/{usuario}")
+    public void cambiarContrasenha(@PathVariable("usuario") String usuario,@RequestBody String contrasenha) throws SQLException {
+        new vendedorDAO().cambiarContraseña(usuario, contrasenha);
+    }
 
 
 

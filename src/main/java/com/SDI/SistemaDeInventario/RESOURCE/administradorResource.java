@@ -1,6 +1,7 @@
 package com.SDI.SistemaDeInventario.RESOURCE;
 
 import com.SDI.SistemaDeInventario.DAO.administradorDAO;
+import com.SDI.SistemaDeInventario.DAO.vendedorDAO;
 import com.SDI.SistemaDeInventario.DTO.EmailSender;
 import com.SDI.SistemaDeInventario.DTO.Empleados;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -44,7 +45,7 @@ private EmailSender emailSender;
             System.out.println(y.toString());
         }
 
-         // emailSender.sendEmail(temp.getNombre(), temp.getApellido(), temp.getContrasenha(), temp.getCorreo());
+        emailSender.sendEmail(temp.getNombre(), temp.getApellido(), temp.getContrasenha(), temp.getCorreo());
         return temp;
     }
 
@@ -67,6 +68,12 @@ private EmailSender emailSender;
         }catch (SQLException y){
             System.out.println(y.toString());
         }
+    }
+
+
+    @RequestMapping(method = RequestMethod.PUT,value="/admin/restar/{usuario}")
+    public void cambiarContrasenha(@PathVariable("usuario") String usuario,@RequestBody String contrasenha) throws SQLException {
+        new administradorDAO().cambiarContraseña(usuario, contrasenha);
     }
 
 }
