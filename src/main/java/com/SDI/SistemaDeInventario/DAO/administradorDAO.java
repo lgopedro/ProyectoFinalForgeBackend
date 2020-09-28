@@ -1,7 +1,11 @@
 package com.SDI.SistemaDeInventario.DAO;
 
 import com.SDI.SistemaDeInventario.ConnectionManager;
+import com.SDI.SistemaDeInventario.DTO.EmailSender;
 import com.SDI.SistemaDeInventario.DTO.Empleados;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,12 +15,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class administradorDAO {
 
     private Connection connection;
     public administradorDAO() throws SQLException{
         connection = ConnectionManager.obtenerConexion();
     }
+
+
 
     public List<Empleados> obtenerAdministradorPorUsuario(String usuario) throws SQLException {
         String sql = " select * " +
@@ -39,17 +46,27 @@ public class administradorDAO {
         }
         return administradores;
     }
-    public void insertarAdministrador(Empleados administrador) throws SQLException {
+    public Empleados insertarAdministrador(Empleados administrador) throws SQLException {
         String sql = " insert into EMPLEADOS_SDI(usuario, nombre, apellido, correo, contrasenha, esAdmin) " +
                 " values (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = connection.prepareStatement(sql);
+        String contrasenha = new PasswordGenerator().generate();
         ps.setString(1, administrador.getUsuario());
         ps.setString(2, administrador.getNombre());
         ps.setString(3, administrador.getApellido());
         ps.setString(4, administrador.getCorreo());
-        ps.setString(5, administrador.getContrasenha());
+        ps.setString(5, contrasenha);
         ps.setInt(6, administrador.getEsAdmin());
         ps.executeUpdate();
+
+        Empleados contacto = new Empleados(administrador.getUsuario(),
+                                           administrador.getNombre(),
+                                            administrador.getApellido(),
+                                            administrador.getCorreo(),
+                                            contrasenha,
+                                            administrador.getEsAdmin());
+
+        return contacto;
     }
     public void borrarAdministradorPorUsuario(String usuario) throws SQLException {
         String sql = " delete from EMPLEADOS_SDI " +

@@ -112,4 +112,13 @@ public class productosDAO {
         ps.setInt(7, id);
         ps.executeUpdate();
     }
+
+    public void aumentarStockDeProducto(int id, int ingreso) throws SQLException {
+        String sql = "UPDATE PRODUCTOS SET stock= stock + ?  WHERE id=?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, ingreso);
+        ps.setInt(2, id);
+        ps.executeUpdate();
+    }
+
 }

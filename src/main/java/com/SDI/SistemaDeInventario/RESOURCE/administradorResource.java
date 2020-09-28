@@ -1,8 +1,10 @@
 package com.SDI.SistemaDeInventario.RESOURCE;
 
 import com.SDI.SistemaDeInventario.DAO.administradorDAO;
+import com.SDI.SistemaDeInventario.DTO.EmailSender;
 import com.SDI.SistemaDeInventario.DTO.Empleados;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,6 +17,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class administradorResource {
 
+@Autowired
+private EmailSender emailSender;
 
 
     @RequestMapping(method = RequestMethod.GET,value = "/administrador")
@@ -24,9 +28,11 @@ public class administradorResource {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/administrador")
-    public void insertarAdministrador(@RequestBody Empleados administrador) {
+    public Empleados insertarAdministrador(@RequestBody Empleados administrador) {
+
+        Empleados temp= null;
         try{
-            new administradorDAO().insertarAdministrador(administrador);
+          temp =  new administradorDAO().insertarAdministrador(administrador);
         }catch (SQLServerException x){
             System.out.println(x.toString());
             if (x.toString().contains("Violation of PRIMARY KEY")) {
@@ -37,6 +43,9 @@ public class administradorResource {
         }catch (SQLException y){
             System.out.println(y.toString());
         }
+
+         // emailSender.sendEmail(temp.getNombre(), temp.getApellido(), temp.getContrasenha(), temp.getCorreo());
+        return temp;
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/administrador/{administrador}")
