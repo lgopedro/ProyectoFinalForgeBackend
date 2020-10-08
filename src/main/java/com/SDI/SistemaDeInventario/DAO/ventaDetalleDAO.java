@@ -42,7 +42,7 @@ public class ventaDetalleDAO {
     }
 
     public List<VentaDetalle> obtenerDetalles() throws SQLException {
-        String sql="SELECT * FROM DETALLE_VENTA";
+        String sql="SELECT * from DETALLE_VENTA where idVenta=(SELECT MAX (idVenta) from VENTA)";
         PreparedStatement ps = connection.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         List<VentaDetalle> detallesDeVentas = new ArrayList<>();

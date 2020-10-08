@@ -71,7 +71,7 @@ private EmailSender emailSender;
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT,value="/admin/restar/{usuario}")
+    @RequestMapping(method = RequestMethod.PUT,value="/admin/{usuario}")
     public void cambiarContrasenha(@PathVariable("usuario") String usuario,@RequestBody String contrasenha) throws SQLException {
         new administradorDAO().cambiarContraseña(usuario, contrasenha);
     }
